@@ -1,0 +1,164 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-danger);color:var(--color-text-danger);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.prog-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.prog-fill{height:4px;background:var(--color-text-danger);border-radius:2px;transition:width .4s}
+.scenario-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.sc-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.sc-text{font-size:14px;color:var(--color-text-primary);line-height:1.6;margin-bottom:1rem;background:var(--color-background-primary);padding:.75rem;border-radius:var(--border-radius-md);border-left:3px solid var(--color-border-danger)}
+.principle-grid{display:flex;flex-direction:column;gap:10px;margin-bottom:1rem}
+.p-row{display:flex;align-items:flex-start;gap:10px}
+.p-label{font-size:12px;font-weight:500;min-width:110px;padding-top:4px;color:var(--color-text-secondary)}
+.p-btns{display:flex;gap:6px;flex-wrap:wrap}
+.pb{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.35rem .75rem;font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)}
+.pb:hover{background:var(--color-background-secondary)}
+.pb.sel{background:var(--color-background-primary);border-color:var(--color-border-primary);font-weight:500}
+.pb.cor{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.pb.wrg{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.irb-row{margin-bottom:.8rem}
+.irb-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.3rem}
+.irb-btns{display:flex;gap:8px;flex-wrap:wrap}
+.ib{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.4rem .85rem;font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-primary)}
+.ib:hover{background:var(--color-background-secondary)}
+.ib.sel{background:var(--color-background-primary);border-color:var(--color-border-primary);font-weight:500}
+.ib.cor{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.ib.wrg{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.check-row{display:flex;gap:8px;margin-top:.75rem}
+.check-btn{background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;cursor:pointer}
+.check-btn:disabled{opacity:.4;cursor:default}
+.next-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;color:var(--color-text-primary);cursor:pointer}
+.fb-box{margin-top:.75rem;font-size:13px;line-height:1.5;padding:.7rem .9rem;border-radius:var(--border-radius-md);display:none}
+.fb-box.show{display:block}
+.fb-box.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.fb-box.bad{background:var(--color-background-danger);color:var(--color-text-danger)}
+.summary{text-align:center;padding:2rem 1rem}
+.score-ring{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--color-border-danger);font-size:24px;font-weight:500;color:var(--color-text-danger);margin-bottom:1rem}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapter 4</span>
+  <h2>Ethics in research — IRB decision scenarios</h2>
+  <p class="sub">Read each research proposal. Evaluate it against the three Belmont principles and decide the correct level of IRB review.</p>
+  <div class="prog-bar"><div class="prog-fill" id="pg" style="width:0%"></div></div>
+  <div id="area"></div>
+</div>
+<script>
+const scenarios=[
+  {
+    title:'Scenario 1 of 4',
+    text:'A researcher wants to ask 200 college students to complete an anonymous online survey about their study habits and GPA. No names are collected. Participation is entirely voluntary and students can stop at any time. There is no deception. The researcher is a professor but students in her own class are excluded.',
+    principles:[
+      {name:'Respect for persons',options:['Upheld','Violated'],answer:'Upheld',hint:'Informed consent is implied by voluntary participation; anonymity protects participants; exclusion of own students removes coercive power dynamics.'},
+      {name:'Beneficence',options:['Upheld','Violated'],answer:'Upheld',hint:'Risk is minimal (anonymous survey about study habits). Benefits (educational research) outweigh risks.'},
+      {name:'Justice',options:['Upheld','Violated'],answer:'Upheld',hint:'Burden is not unfairly placed on a vulnerable group; college students are appropriate for research about study habits.'},
+    ],
+    irb:{options:['Exempt','Expedited','Full board review'],answer:'Exempt',hint:'Anonymous surveys with no sensitive topics and minimal risk typically qualify for exempt review under 45 CFR 46.101(b).'},
+    fb_ok:'Correct on all counts. This study is low-risk, fully voluntary, and anonymous — a textbook example of an exempt-level study.',
+    fb_bad:'Review your answers. Anonymous, voluntary surveys with no sensitive content and no vulnerable populations are typically exempt.'
+  },
+  {
+    title:'Scenario 2 of 4',
+    text:'A researcher recruits participants from a homeless shelter to complete a study on decision-making under stress. Participants are told they will receive $40 for completing the session. The researcher does not obtain written informed consent, telling participants: "Your participation implies your consent."',
+    principles:[
+      {name:'Respect for persons',options:['Upheld','Violated'],answer:'Violated',hint:'Implied consent is not adequate — informed consent must be documented and freely given. The $40 payment may also be coercive to a financially vulnerable population.'},
+      {name:'Beneficence',options:['Upheld','Violated'],answer:'Violated',hint:'Using a vulnerable population without proper safeguards increases risk of psychological harm. The financial incentive may override their autonomous decision-making.'},
+      {name:'Justice',options:['Upheld','Violated'],answer:'Violated',hint:'Recruiting only from a homeless shelter concentrates the burden of research on a vulnerable, disadvantaged group — a classic justice violation.'},
+    ],
+    irb:{options:['Exempt','Expedited','Full board review'],answer:'Full board review',hint:'Research involving a vulnerable population (homeless individuals), large financial incentives, and missing informed consent procedures requires full board review.'},
+    fb_ok:'Correct. This scenario violates all three Belmont principles and clearly requires full board review due to the vulnerable population and absent consent procedures.',
+    fb_bad:'Look again — this scenario has multiple red flags: vulnerable population, absent written consent, and a potentially coercive incentive. These push it to full board review.'
+  },
+  {
+    title:'Scenario 3 of 4',
+    text:'A clinical psychologist wants to conduct structured interviews with adult cancer survivors about their coping strategies. Participants are fully informed, give written consent, and can withdraw at any time. The topic is sensitive (cancer diagnosis) but participants are not in active treatment and are psychologically stable.',
+    principles:[
+      {name:'Respect for persons',options:['Upheld','Violated'],answer:'Upheld',hint:'Full written informed consent with right to withdraw — respect for persons is met.'},
+      {name:'Beneficence',options:['Upheld','Violated'],answer:'Upheld',hint:'Although the topic is sensitive, participants are stable, interviews are conducted by a clinical professional, and the research may help future patients.'},
+      {name:'Justice',options:['Upheld','Violated'],answer:'Upheld',hint:'Cancer survivors are a relevant and appropriate population for this research question.'},
+    ],
+    irb:{options:['Exempt','Expedited','Full board review'],answer:'Expedited',hint:'The topic (cancer, psychological coping) is sensitive but risk is minimal given participant stability and professional oversight. Expedited review is appropriate.'},
+    fb_ok:'Correct. Sensitive topics with minimal risk and fully consenting, stable adults typically fall under expedited rather than full board review.',
+    fb_bad:'This scenario meets Belmont principles but involves a sensitive topic — that rules out exempt. Because risk is low and participants are stable, expedited (not full board) is appropriate.'
+  },
+  {
+    title:'Scenario 4 of 4',
+    text:'A researcher designs a study on conformity. Participants are told they are testing visual perception, but the real purpose is to observe whether they agree with incorrect answers given by confederates. After the study, all participants are immediately debriefed about the true purpose.',
+    principles:[
+      {name:'Respect for persons',options:['Upheld','Violated'],answer:'Violated',hint:'Deception prevents truly informed consent at the outset — this is a temporary violation of respect for persons that must be justified by scientific necessity and remedied by full debriefing.'},
+      {name:'Beneficence',options:['Upheld','Violated'],answer:'Upheld',hint:'Psychological risk is minimal (no harm, brief deception, full debrief). Benefits of understanding conformity behavior are real.'},
+      {name:'Justice',options:['Upheld','Violated'],answer:'Upheld',hint:'No vulnerable population is targeted; burden and benefit are shared appropriately.'},
+    ],
+    irb:{options:['Exempt','Expedited','Full board review'],answer:'Expedited',hint:'Deception studies are not exempt (they require review of the debrief protocol), but this one poses minimal risk and includes a full debrief — expedited review is appropriate.'},
+    fb_ok:'Correct. Deception violates full informed consent (respect for persons), but with minimal risk and a thorough debrief, expedited review is appropriate rather than full board.',
+    fb_bad:'Deception means this cannot be exempt — IRB must review the debrief protocol. However, with minimal risk and a proper debrief, expedited (not full board) is the correct level.'
+  },
+];
+let cur=0,score=0,princPicks=[],irbPick=null,checked=false;
+function init(){princPicks=scenarios[cur].principles.map(()=>null);irbPick=null;checked=false;render();}
+function render(){
+  if(cur>=scenarios.length){showSummary();return;}
+  const s=scenarios[cur];
+  document.getElementById('pg').style.width=Math.round((cur/scenarios.length)*100)+'%';
+  const allFilled=princPicks.every(p=>p!==null)&&irbPick!==null;
+  const princHtml=s.principles.map((p,i)=>`
+    <div class="p-row">
+      <div class="p-label">${p.name}</div>
+      <div class="p-btns">${p.options.map(o=>{
+        let cls='pb';
+        if(checked){if(o===p.answer)cls+=' cor';else if(o===princPicks[i]&&princPicks[i]!==p.answer)cls+=' wrg';}
+        else if(o===princPicks[i])cls+=' sel';
+        return `<button class="${cls}" onclick="pickP(${i},'${o}')" ${checked?'disabled':''}>${o}</button>`;
+      }).join('')}</div>
+      ${checked&&princPicks[i]!==p.answer?`<div style="font-size:11px;color:var(--color-text-danger);padding-top:3px;flex:1">${p.hint}</div>`:''}
+    </div>`).join('');
+  const irbHtml=s.irb.options.map(o=>{
+    let cls='ib';
+    if(checked){if(o===s.irb.answer)cls+=' cor';else if(o===irbPick&&irbPick!==s.irb.answer)cls+=' wrg';}
+    else if(o===irbPick)cls+=' sel';
+    return `<button class="${cls}" onclick="pickIRB('${o}')" ${checked?'disabled':''}>${o}</button>`;
+  }).join('');
+  let fb='';
+  if(checked){
+    const allOk=princPicks.every((p,i)=>p===s.principles[i].answer)&&irbPick===s.irb.answer;
+    if(allOk){score++;fb=`<div class="fb-box ok show">${s.fb_ok}</div>`;}
+    else fb=`<div class="fb-box bad show">${s.fb_bad}${irbPick!==s.irb.answer?` IRB level: ${s.irb.hint}`:''}</div>`;
+  }
+  document.getElementById('area').innerHTML=`
+    <div class="scenario-box">
+      <div class="sc-label">${s.title}</div>
+      <div class="sc-text">${s.text}</div>
+      <div style="font-size:12px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.5rem">Belmont principles — upheld or violated?</div>
+      <div class="principle-grid">${princHtml}</div>
+      <div class="irb-row">
+        <div class="irb-label">Level of IRB review required</div>
+        <div class="irb-btns">${irbHtml}</div>
+        ${checked&&irbPick!==s.irb.answer?`<div style="font-size:11px;color:var(--color-text-danger);margin-top:3px">${s.irb.hint}</div>`:''}
+      </div>
+      ${fb}
+      <div class="check-row">
+        <button class="check-btn" onclick="check()" ${allFilled&&!checked?'':'disabled'}>Submit</button>
+        ${checked?`<button class="next-btn" onclick="nextQ()">${cur===scenarios.length-1?'See results':'Next scenario →'}</button>`:''}
+      </div>
+    </div>`;
+}
+function pickP(i,v){if(checked)return;princPicks[i]=v;render();}
+function pickIRB(v){if(checked)return;irbPick=v;render();}
+function check(){checked=true;render();}
+function nextQ(){cur++;init();}
+function showSummary(){
+  document.getElementById('pg').style.width='100%';
+  const pct=Math.round((score/scenarios.length)*100);
+  document.getElementById('area').innerHTML=`<div class="summary">
+    <div class="score-ring">${score}/${scenarios.length}</div>
+    <h3 style="font-size:18px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)">
+      ${pct>=75?'Strong ethics reasoning!':'Review the Belmont principles and IRB review levels in Chapter 4.'}
+    </h3>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Concepts: respect for persons, beneficence, justice, exempt/expedited/full board review, deception, vulnerable populations.</p>
+    <button style="background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);padding:.55rem 1.4rem;font-size:13px;cursor:pointer" onclick="cur=0;score=0;init()">Retake</button>
+  </div>`;
+}
+init();
+</script>
