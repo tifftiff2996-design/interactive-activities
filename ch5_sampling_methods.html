@@ -1,0 +1,104 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-info);color:var(--color-text-info);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.prog-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.prog-fill{height:4px;background:var(--color-text-info);border-radius:2px;transition:width .4s}
+.ref{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.25rem}
+.ref-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.6rem .8rem}
+.ref-name{font-size:12px;font-weight:500;margin-bottom:2px;color:var(--color-text-primary)}
+.ref-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+.q-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.q-meta{font-size:12px;color:var(--color-text-secondary);margin-bottom:.4rem}
+.q-text{font-size:15px;color:var(--color-text-primary);line-height:1.6;margin-bottom:.9rem;font-style:italic}
+.opts{display:flex;flex-direction:column;gap:7px}
+.ob{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.6rem .9rem;font-size:13px;color:var(--color-text-primary);cursor:pointer;text-align:left}
+.ob:hover{background:var(--color-background-secondary)}
+.ob.cor{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.ob.wrg{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.ob.rev{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success);opacity:.6}
+.fb{margin-top:.7rem;font-size:13px;line-height:1.5;padding:.6rem .9rem;border-radius:var(--border-radius-md);display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.fb.bad{background:var(--color-background-danger);color:var(--color-text-danger)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:.75rem}
+.nb{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.nb:disabled{opacity:.35;cursor:default}
+.nb.p{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.summary{text-align:center;padding:2rem 1rem}
+.score-ring{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--color-border-info);font-size:24px;font-weight:500;color:var(--color-text-info);margin-bottom:1rem}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapter 5</span>
+  <h2>Sampling methods — identify the technique</h2>
+  <p class="sub">Read each study description and identify the sampling method used. Consider the threat to external validity in each case.</p>
+  <div class="ref">
+    <div class="ref-card"><div class="ref-name">Simple random</div><div class="ref-desc">Every member of the population has an equal chance of selection</div></div>
+    <div class="ref-card"><div class="ref-name">Stratified random</div><div class="ref-desc">Population divided into subgroups; random sample drawn from each</div></div>
+    <div class="ref-card"><div class="ref-name">Systematic</div><div class="ref-desc">Every nth person selected from a list</div></div>
+    <div class="ref-card"><div class="ref-name">Convenience</div><div class="ref-desc">Participants selected because they are readily available</div></div>
+    <div class="ref-card"><div class="ref-name">Voluntary / self-selection</div><div class="ref-desc">Participants choose to take part (e.g. respond to an ad)</div></div>
+    <div class="ref-card"><div class="ref-name">Cluster</div><div class="ref-desc">Groups (clusters) randomly selected; all members of chosen clusters included</div></div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="pg" style="width:0%"></div></div>
+  <div id="area"></div>
+</div>
+<script>
+const items=[
+  {q:'A researcher posts a flyer in the student union asking anyone interested in a study on sleep habits to email her. Forty students respond.',a:1,opts:['Simple random sampling','Voluntary / self-selection sampling','Convenience sampling','Stratified random sampling'],fb:'When participants actively choose to enroll after seeing an advertisement or flyer, that is voluntary or self-selection sampling. Those who respond may differ systematically from those who don\'t — a threat to external validity.'},
+  {q:'A professor assigns every student in a 300-person lecture class a number from 1 to 300, then uses a random number table to select 50 of them.',a:0,opts:['Cluster sampling','Systematic sampling','Simple random sampling','Convenience sampling'],fb:'Each member of the defined population (the class) had an equal, independent chance of selection — that\'s simple random sampling.'},
+  {q:'A national pollster divides the U.S. population into subgroups by age (18–34, 35–54, 55+) and income level, then randomly selects participants from each subgroup proportionally.',a:3,opts:['Systematic sampling','Convenience sampling','Cluster sampling','Stratified random sampling'],fb:'Dividing the population into meaningful subgroups and randomly sampling within each group is stratified random sampling — it ensures all subgroups are represented.'},
+  {q:'A researcher studying hospital patient satisfaction selects every 10th patient admitted during a 3-month period from the admissions log.',a:1,opts:['Simple random sampling','Systematic sampling','Convenience sampling','Cluster sampling'],fb:'Selecting every nth individual from an ordered list is systematic sampling. It approximates random sampling but can introduce bias if the list has a recurring pattern at the same interval.'},
+  {q:'A researcher wants to study classroom behavior across a school district. She randomly selects 8 classrooms from the district\'s 120, then observes all students in those 8 rooms.',a:3,opts:['Stratified random sampling','Convenience sampling','Systematic sampling','Cluster sampling'],fb:'Randomly selecting intact groups (classrooms) and including all members of selected groups is cluster sampling — efficient for large, geographically dispersed populations.'},
+  {q:'A graduate student recruits participants from her own intro psychology class to complete a 20-minute memory study for extra credit.',a:2,opts:['Voluntary sampling','Simple random sampling','Convenience sampling','Systematic sampling'],fb:'Selecting whoever is readily available — in this case, students in a conveniently accessible class — is convenience sampling. It\'s efficient but limits generalizability beyond the sample.'},
+  {q:'A researcher notices that psychology studies using only undergraduate participants may not generalize to older adults. She recruits equal numbers from a university, a community center, and an online panel.',a:0,opts:['Stratified random sampling','Cluster sampling','Convenience sampling','Simple random sampling'],fb:'This is closer to stratified sampling — the researcher has intentionally created subgroups (student, community, online) and sampled from each to improve representativeness.'},
+];
+let cur=0,score=0,picked=null,checked=false;
+function render(){
+  if(cur>=items.length){showSummary();return;}
+  const it=items[cur];
+  document.getElementById('pg').style.width=Math.round((cur/items.length)*100)+'%';
+  const optHtml=it.opts.map((o,i)=>{
+    let cls='ob';
+    if(checked){if(i===it.a)cls+=' cor';else if(i===picked&&picked!==it.a)cls+=' wrg';else if(i===it.a)cls+=' rev';}
+    return `<button class="${cls}" onclick="pick(${i})" ${checked?'disabled':''}>${o}</button>`;
+  }).join('');
+  let fb='';
+  if(checked){
+    const ok=picked===it.a;
+    fb=`<div class="fb ${ok?'ok':'bad'} show">${ok?'Correct — ':'Incorrect. '}${it.fb}</div>`;
+  }
+  document.getElementById('area').innerHTML=`
+    <div class="q-card">
+      <div class="q-meta">Study ${cur+1} of ${items.length}</div>
+      <div class="q-text">${it.q}</div>
+      <div class="opts">${optHtml}</div>
+      ${fb}
+    </div>
+    <div class="nav">
+      <button class="nb" onclick="go(-1)" ${cur===0?'disabled':''}>← Back</button>
+      <span style="font-size:13px;color:var(--color-text-secondary)">${score} correct</span>
+      <button class="nb p" onclick="go(1)" ${!checked?'disabled':''}>
+        ${cur===items.length-1?'Results':'Next →'}
+      </button>
+    </div>`;
+}
+function pick(i){if(checked)return;picked=i;checked=true;if(i===items[cur].a)score++;render();}
+function go(d){if(d>0&&cur<items.length)cur++;else if(d<0&&cur>0){cur--;picked=null;checked=false;}render();}
+function showSummary(){
+  document.getElementById('pg').style.width='100%';
+  const pct=Math.round((score/items.length)*100);
+  document.getElementById('area').innerHTML=`<div class="summary">
+    <div class="score-ring">${score}/${items.length}</div>
+    <h3 style="font-size:18px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)">
+      ${pct>=80?'Excellent — you can identify sampling methods reliably.':pct>=57?'Good — review convenience vs. voluntary and stratified vs. cluster.':'Revisit the sampling methods section in Chapter 5.'}
+    </h3>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Concepts: simple random, stratified, systematic, convenience, voluntary, cluster sampling; external validity.</p>
+    <button style="background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);padding:.55rem 1.4rem;font-size:13px;cursor:pointer" onclick="cur=0;score=0;picked=null;checked=false;render()">Retake</button>
+  </div>`;
+}
+render();
+</script>
