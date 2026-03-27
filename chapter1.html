@@ -1,0 +1,113 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-info);color:var(--color-text-info);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.progress-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.progress-fill{height:4px;background:var(--color-text-info);border-radius:2px;transition:width .4s}
+.scenario-box{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.25rem}
+.scenario-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.5rem}
+.scenario-text{font-size:15px;color:var(--color-text-primary);line-height:1.6;margin-bottom:1rem;font-style:italic}
+.options{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.opt-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.6rem .9rem;font-size:13px;color:var(--color-text-primary);cursor:pointer;text-align:left;transition:background .15s,border-color .15s}
+.opt-btn:hover{background:var(--color-background-secondary)}
+.opt-btn.correct{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.opt-btn.wrong{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.opt-btn.reveal{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success);opacity:.6}
+.feedback{margin-top:.75rem;font-size:13px;line-height:1.5;padding:.6rem .9rem;border-radius:var(--border-radius-md);display:none}
+.feedback.show{display:block}
+.feedback.correct{background:var(--color-background-success);color:var(--color-text-success)}
+.feedback.wrong{background:var(--color-background-danger);color:var(--color-text-danger)}
+.nav{display:flex;align-items:center;justify-content:space-between;margin-top:1rem}
+.nav-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;color:var(--color-text-primary);cursor:pointer}
+.nav-btn:disabled{opacity:.35;cursor:default}
+.nav-btn.primary{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.score-badge{font-size:13px;color:var(--color-text-secondary)}
+.summary{text-align:center;padding:2rem 1rem}
+.summary h3{font-size:20px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)}
+.summary p{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.score-ring{display:inline-flex;align-items:center;justify-content:center;width:90px;height:90px;border-radius:50%;border:3px solid var(--color-border-info);font-size:26px;font-weight:500;color:var(--color-text-info);margin-bottom:1rem}
+.tag-grid{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:1.5rem}
+.tag{font-size:12px;padding:4px 10px;border-radius:20px;border:0.5px solid var(--color-border-tertiary);color:var(--color-text-secondary)}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapter 1</span>
+  <h2>Ways of Knowing — Interactive Classifier</h2>
+  <p class="sub">Read each scenario and select which way of knowing it represents. Instant feedback after each answer.</p>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div id="quiz-area"></div>
+</div>
+<script>
+const items=[
+  {q:"Your friend insists that eating carrots improves eyesight because her grandmother always said so, and grandmother was never wrong.",a:1,opts:["Intuition","Authority","Tenacity","Empiricism"],fb:["Intuition is a gut feeling, not reliance on an expert figure.","Correct — the claim is accepted because it came from a trusted authority figure (grandmother), not from evidence.","Tenacity means holding a belief simply because you've always believed it, without invoking an authority.","Empiricism requires systematic observation and data — none here."]},
+  {q:"A researcher designs an experiment where half the participants receive caffeine and half receive a placebo, then measures reaction time under controlled conditions.",a:3,opts:["Tenacity","Rationalism","Authority","Empiricism"],fb:["Tenacity means stubbornly holding a belief, not testing it.","Rationalism relies on logic and reasoning alone, not controlled observation.","Authority defers to an expert — this is independent data collection.","Correct — empiricism means acquiring knowledge through systematic, controlled observation and measurement."]},
+  {q:"Marcus believes that people are basically selfish because, if you think about it logically, every action ultimately benefits the actor in some way.",a:1,opts:["Empiricism","Rationalism","Authority","Tenacity"],fb:["Empiricism requires collecting real-world data, not reasoning from first principles.","Correct — Marcus is using logic and deductive reasoning alone, with no data. That's rationalism.","No expert is being cited here.","Tenacity is clinging to a prior belief — Marcus is reasoning, not just repeating a habit."]},
+  {q:"Despite several studies showing that the full moon does not increase crime rates, a police officer still believes it does because she's 'always known it to be true.'",a:3,opts:["Empiricism","Rationalism","Authority","Tenacity"],fb:["Empiricism would mean she updated her belief based on the studies.","Rationalism involves logical argument — she isn't making one.","She isn't deferring to an expert.","Correct — tenacity is maintaining a belief in the face of contradictory evidence simply because you've always held it."]},
+  {q:"A student guesses that people who drink coffee are more productive, simply because it 'feels right' to her, without any evidence or reasoning.",a:0,opts:["Intuition","Empiricism","Rationalism","Authority"],fb:["Correct — intuition is a belief based on a gut feeling with no evidence or logical argument behind it.","Empiricism requires data collection.","Rationalism requires logical reasoning — not just a feeling.","No authority figure is involved."]},
+  {q:"A therapist recommends a specific treatment approach because the latest meta-analysis in a peer-reviewed journal supports it.",a:1,opts:["Tenacity","Empiricism","Rationalism","Authority"],fb:["Tenacity ignores evidence — this therapist is following it.","Empiricism is the process of doing the research — the therapist is citing it, not conducting it here.","No logical chain is being constructed — evidence is being cited.","Correct — deferring to peer-reviewed findings as an authoritative source is the way of knowing through authority, even when that authority is scientific."]},
+  {q:"A logician argues that lying must always be wrong because a world where everyone lied would collapse into chaos — no argument, no data.",a:2,opts:["Intuition","Tenacity","Rationalism","Empiricism"],fb:["Intuition is a feeling — this is a structured argument.","The belief is not merely maintained from habit; it's actively justified through reasoning.","Correct — constructing a logical argument (if everyone did X, then Y would follow) with no appeal to data or authority is rationalism.","Empiricism requires actual observation of lying and its consequences."]},
+  {q:"A psychology professor states that short-term memory can hold 7 ± 2 items, citing Miller's (1956) landmark study.",a:3,opts:["Intuition","Tenacity","Rationalism","Authority/Empiricism — cite the study"],fb:["No gut feeling here.","The belief is based on evidence, not habit.","No pure logic chain — empirical data is cited.","Correct — this is authority (citing an established expert) grounded in empiricism (the original study). Both apply, but in a classroom context this is primarily the way of knowing through authority."]},
+];
+let cur=0,score=0,answered=[];
+function render(){
+  if(cur>=items.length){showSummary();return;}
+  const item=items[cur];
+  const pct=Math.round((cur/items.length)*100);
+  document.getElementById('prog').style.width=pct+'%';
+  const wasAnswered=answered[cur]!==undefined;
+  const chosen=answered[cur];
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="scenario-box">
+      <div class="scenario-label">Scenario ${cur+1} of ${items.length}</div>
+      <div class="scenario-text">"${item.q}"</div>
+      <div class="options">${item.opts.map((o,i)=>{
+        let cls='opt-btn';
+        if(wasAnswered){
+          if(i===item.a) cls+=' correct';
+          else if(i===chosen&&chosen!==item.a) cls+=' wrong';
+        }
+        return `<button class="${cls}" onclick="choose(${i})" ${wasAnswered?'disabled':''}>${o}</button>`;
+      }).join('')}</div>
+      <div class="feedback ${wasAnswered?(chosen===item.a?'correct':'wrong'):''} ${wasAnswered?'show':''}" id="fb">
+        ${wasAnswered?item.fb[chosen]:''}
+      </div>
+    </div>
+    <div class="nav">
+      <button class="nav-btn" onclick="go(-1)" ${cur===0?'disabled':''}>← Back</button>
+      <span class="score-badge">${score} correct so far</span>
+      <button class="nav-btn primary" onclick="go(1)" ${!wasAnswered?'disabled':''}>
+        ${cur===items.length-1?'See results ↗':'Next →'}
+      </button>
+    </div>`;
+}
+function choose(i){
+  if(answered[cur]!==undefined) return;
+  if(i===items[cur].a) score++;
+  answered[cur]=i;
+  render();
+}
+function go(d){cur=Math.max(0,Math.min(items.length,cur+d));render();}
+function showSummary(){
+  const pct=Math.round((score/items.length)*100);
+  const msg=pct>=87?'Excellent mastery of Chapter 1!':pct>=62?'Good foundation — review the explanations for any you missed.':'Revisit Chapter 1 before moving on.';
+  document.getElementById('prog').style.width='100%';
+  document.getElementById('quiz-area').innerHTML=`
+    <div class="summary">
+      <div class="score-ring">${score}/${items.length}</div>
+      <h3>${pct}% — ${msg}</h3>
+      <p>Ways of knowing covered in this activity:</p>
+      <div class="tag-grid">
+        <span class="tag">Intuition</span>
+        <span class="tag">Authority</span>
+        <span class="tag">Tenacity</span>
+        <span class="tag">Rationalism</span>
+        <span class="tag">Empiricism</span>
+      </div>
+      <button class="nav-btn primary" onclick="cur=0;score=0;answered=[];render()">Retake activity</button>
+    </div>`;
+}
+render();
+</script>
