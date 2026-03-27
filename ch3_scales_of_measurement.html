@@ -1,0 +1,123 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-success);color:var(--color-text-success);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.prog-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.prog-fill{height:4px;background:var(--color-text-success);border-radius:2px;transition:width .4s}
+.ref{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:1.25rem}
+.ref-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.6rem .8rem}
+.ref-name{font-size:12px;font-weight:500;margin-bottom:2px}
+.ref-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.4}
+.n{color:#5B3FAA}.o{color:#A36200}.i{color:#0B5E45}.r{color:#7C1A1A}
+.scenario-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.q-label{font-size:12px;color:var(--color-text-secondary);margin-bottom:.4rem}
+.measure-text{font-size:15px;color:var(--color-text-primary);line-height:1.5;margin-bottom:.9rem;font-style:italic}
+.scale-btns{display:grid;grid-template-columns:repeat(4,1fr);gap:6px}
+.sb{border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem .3rem;font-size:12px;font-weight:500;cursor:pointer;text-align:center;background:var(--color-background-primary);transition:background .15s}
+.sb:hover{background:var(--color-background-secondary)}
+.sb.sel-n,.sb.cor-n{background:#EDE8FA;border-color:#9B7DE0;color:#5B3FAA}
+.sb.sel-o,.sb.cor-o{background:#FEF4E0;border-color:#C9870A;color:#A36200}
+.sb.sel-i,.sb.cor-i{background:#E4F5EE;border-color:#1A8C5F;color:#0B5E45}
+.sb.sel-r,.sb.cor-r{background:#FAE6E6;border-color:#C14040;color:#7C1A1A}
+.sb.wrong-pick{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.fb{margin-top:.7rem;font-size:13px;line-height:1.5;padding:.6rem .9rem;border-radius:var(--border-radius-md);display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.fb.bad{background:var(--color-background-danger);color:var(--color-text-danger)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:.75rem}
+.nb{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.nb:disabled{opacity:.35;cursor:default}
+.nb.p{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.summary{text-align:center;padding:2rem 1rem}
+.score-ring{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--color-border-success);font-size:24px;font-weight:500;color:var(--color-text-success);margin-bottom:1rem}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapter 3</span>
+  <h2>Scales of measurement classifier</h2>
+  <p class="sub">Identify whether each measure is nominal, ordinal, interval, or ratio. Use the reference cards below.</p>
+  <div class="ref">
+    <div class="ref-card"><div class="ref-name n">Nominal</div><div class="ref-desc">Categories only. No order. No math. (e.g. eye color, gender)</div></div>
+    <div class="ref-card"><div class="ref-name o">Ordinal</div><div class="ref-desc">Ranked order. Gaps unequal. (e.g. 1st/2nd/3rd place)</div></div>
+    <div class="ref-card"><div class="ref-name i">Interval</div><div class="ref-desc">Equal gaps. No true zero. (e.g. temperature °C, IQ)</div></div>
+    <div class="ref-card"><div class="ref-name r">Ratio</div><div class="ref-desc">Equal gaps + true zero. Ratios meaningful. (e.g. height, reaction time)</div></div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="pg" style="width:0%"></div></div>
+  <div id="area"></div>
+</div>
+<script>
+const items=[
+  {m:'A participant\'s political party affiliation (Democrat, Republican, Independent, Other)',a:'N',fb:'Political affiliation is a label with no numeric value or order — that\'s nominal.'},
+  {m:'Finishing position in a 5K race (1st, 2nd, 3rd...)',a:'O',fb:'Positions are ranked, but the gap between 1st and 2nd may differ from the gap between 2nd and 3rd — ordinal.'},
+  {m:'Number of correct answers on a 20-question quiz',a:'R',fb:'There is a true zero (zero correct), and the gaps between scores are equal — ratio.'},
+  {m:'Temperature in degrees Celsius recorded each morning during a study',a:'I',fb:'°C has equal intervals but no true zero (0°C does not mean absence of temperature) — interval.'},
+  {m:'A Likert scale rating (1 = strongly disagree to 5 = strongly agree)',a:'O',fb:'Likert items have order but unequal assumed gaps between points — ordinal (though often treated as interval in practice).'},
+  {m:'Reaction time in milliseconds on a cognitive task',a:'R',fb:'Reaction time has a true zero and equal intervals — ratio. You can say someone was twice as fast.'},
+  {m:'Blood type (A, B, AB, O)',a:'N',fb:'Blood type is purely categorical — no order, no numeric meaning — nominal.'},
+  {m:'Class rank in a graduating cohort (valedictorian = 1, salutatorian = 2…)',a:'O',fb:'Class rank orders students but the academic gap between ranks is not necessarily equal — ordinal.'},
+  {m:'Score on a standardized IQ test',a:'I',fb:'IQ has equal intervals but no true zero (IQ of 0 does not mean no intelligence) — interval.'},
+  {m:'Number of hours of sleep recorded with a wristband monitor',a:'R',fb:'Hours of sleep has a true zero and equal units — ratio.'},
+];
+let cur=0,score=0,picked=null,checked=false;
+const map={N:'sel-n',O:'sel-o',I:'sel-i',R:'sel-r'};
+const cmap={N:'cor-n',O:'cor-o',I:'cor-i',R:'cor-r'};
+const labels={N:'Nominal',O:'Ordinal',I:'Interval',R:'Ratio'};
+function render(){
+  if(cur>=items.length){showSummary();return;}
+  const it=items[cur];
+  document.getElementById('pg').style.width=Math.round((cur/items.length)*100)+'%';
+  const btns=['N','O','I','R'].map(k=>{
+    let cls='sb';
+    if(checked){
+      if(k===it.a) cls+=' '+cmap[k];
+      else if(k===picked&&picked!==it.a) cls+=' wrong-pick';
+    } else if(k===picked) cls+=' '+map[k];
+    return `<button class="${cls}" onclick="pick('${k}')" ${checked?'disabled':''}>${labels[k]}</button>`;
+  }).join('');
+  let fb='';
+  if(checked){
+    const ok=picked===it.a;
+    fb=`<div class="fb ${ok?'ok':'bad'} show">${ok?'Correct — ':'Incorrect. '}${it.fb}</div>`;
+  }
+  document.getElementById('area').innerHTML=`
+    <div class="scenario-card">
+      <div class="q-label">Measure ${cur+1} of ${items.length}</div>
+      <div class="measure-text">"${it.m}"</div>
+      <div class="scale-btns">${btns}</div>
+      ${fb}
+    </div>
+    <div class="nav">
+      <button class="nb" onclick="go(-1)" ${cur===0?'disabled':''}>← Back</button>
+      <span style="font-size:13px;color:var(--color-text-secondary)">${score} correct</span>
+      <button class="nb p" onclick="go(1)" ${(!checked||!picked)?'disabled':''}>
+        ${cur===items.length-1?'Results':'Next →'}
+      </button>
+    </div>`;
+}
+function pick(k){
+  if(checked) return;
+  picked=k;checked=true;
+  if(k===items[cur].a) score++;
+  render();
+}
+function go(d){
+  if(d>0&&cur<items.length) cur++;
+  else if(d<0&&cur>0){cur--;picked=null;checked=false;}
+  render();
+}
+function showSummary(){
+  document.getElementById('pg').style.width='100%';
+  const pct=Math.round((score/items.length)*100);
+  document.getElementById('area').innerHTML=`<div class="summary">
+    <div class="score-ring">${score}/${items.length}</div>
+    <h3 style="font-size:18px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)">
+      ${pct>=80?'Excellent — you can classify scales confidently.':pct>=60?'Good — review interval vs. ratio and ordinal vs. interval.':'Revisit the scales of measurement section in Chapter 3.'}
+    </h3>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Concepts covered: nominal, ordinal, interval, ratio, true zero, equal intervals.</p>
+    <button class="nb p" onclick="cur=0;score=0;picked=null;checked=false;render()">Retake</button>
+  </div>`;
+}
+render();
+</script>
