@@ -1,0 +1,146 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-warning);color:var(--color-text-warning);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem}
+.progress-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.progress-fill{height:4px;background:var(--color-text-warning);border-radius:2px;transition:width .4s}
+.card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1.25rem}
+.headline{font-size:15px;font-weight:500;color:var(--color-text-primary);line-height:1.5;margin-bottom:1rem;padding:.75rem;background:var(--color-background-primary);border-radius:var(--border-radius-md);border-left:3px solid var(--color-border-warning)}
+.step-label{font-size:12px;font-weight:500;color:var(--color-text-secondary);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.4rem}
+.drop-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:1rem}
+.drop-zone{flex:1;min-width:120px;min-height:38px;border:1px dashed var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.4rem .7rem;font-size:13px;color:var(--color-text-tertiary);display:flex;align-items:center;background:var(--color-background-primary);transition:background .15s;cursor:pointer;position:relative}
+.drop-zone.filled{color:var(--color-text-primary);border-style:solid;border-color:var(--color-border-secondary)}
+.drop-zone.correct{border-color:var(--color-border-success);background:var(--color-background-success);color:var(--color-text-success)}
+.drop-zone.wrong{border-color:var(--color-border-danger);background:var(--color-background-danger);color:var(--color-text-danger)}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:1rem}
+.chip{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:20px;padding:.35rem .8rem;font-size:13px;color:var(--color-text-primary);cursor:pointer;transition:background .15s,opacity .15s}
+.chip:hover{background:var(--color-background-secondary)}
+.chip.used{opacity:.3;pointer-events:none}
+.check-btn{background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);padding:.55rem 1.2rem;font-size:13px;cursor:pointer;margin-right:8px}
+.check-btn:disabled{opacity:.4;cursor:default}
+.next-btn{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.55rem 1.2rem;font-size:13px;color:var(--color-text-primary);cursor:pointer;display:none}
+.fb-box{margin-top:.75rem;font-size:13px;line-height:1.5;padding:.6rem .9rem;border-radius:var(--border-radius-md);display:none}
+.fb-box.show{display:block}
+.fb-box.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.fb-box.bad{background:var(--color-background-danger);color:var(--color-text-danger)}
+.summary{text-align:center;padding:2rem 1rem}
+.score-ring{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--color-border-warning);font-size:24px;font-weight:500;color:var(--color-text-warning);margin-bottom:1rem}
+.restart-btn{background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);padding:.55rem 1.4rem;font-size:13px;cursor:pointer;margin-top:.5rem}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapter 2</span>
+  <h2>Hypothesis builder — drag the correct labels</h2>
+  <p class="sub">Read the news headline, then drag or tap the correct terms into each slot to identify the IV, DV, and hypothesis type.</p>
+  <div class="progress-bar"><div class="progress-fill" id="prog" style="width:0%"></div></div>
+  <div id="area"></div>
+</div>
+<script>
+const Qs=[
+  {
+    headline:'"Screen time linked to lower grades in teenagers"',
+    slots:[
+      {label:'Independent variable (IV)',answer:'Amount of daily screen time',hint:'The IV is what differs between groups or is the presumed cause.'},
+      {label:'Dependent variable (DV)',answer:'Academic grades / GPA',hint:'The DV is what is measured as the outcome.'},
+      {label:'Directional hypothesis',answer:'More screen time → lower grades',hint:'A directional hypothesis predicts the direction of the effect.'},
+      {label:'Non-directional hypothesis',answer:'Screen time affects grades',hint:'Non-directional just predicts an effect exists, not its direction.'},
+    ],
+    chips:['Academic grades / GPA','Screen time affects grades','Amount of daily screen time','More screen time → lower grades','Homework completion rate','Hypothesis is untestable']
+  },
+  {
+    headline:'"Study finds meditation reduces workplace stress in nurses"',
+    slots:[
+      {label:'Independent variable (IV)',answer:'Whether meditation was practiced',hint:'The IV is the practice that was manipulated or differs between groups.'},
+      {label:'Dependent variable (DV)',answer:'Level of workplace stress',hint:'Stress is the outcome being measured.'},
+      {label:'Directional hypothesis',answer:'Meditation reduces workplace stress',hint:'This predicts the direction — stress goes down.'},
+      {label:'Non-directional hypothesis',answer:'Meditation affects workplace stress',hint:'"Affects" is neutral — no direction stated.'},
+    ],
+    chips:['Level of workplace stress','Meditation affects workplace stress','Whether meditation was practiced','Meditation reduces workplace stress','Job satisfaction','Number of days off']
+  },
+  {
+    headline:'"Children who read more books score higher on vocabulary tests"',
+    slots:[
+      {label:'Independent variable (IV)',answer:'Number of books read',hint:'Reading frequency is the presumed predictor or manipulated variable.'},
+      {label:'Dependent variable (DV)',answer:'Vocabulary test score',hint:'The test score is the measured outcome.'},
+      {label:'Directional hypothesis',answer:'More books read → higher vocabulary scores',hint:'Direction is specified: more reading = higher scores.'},
+      {label:'Non-directional hypothesis',answer:'Reading frequency affects vocabulary scores',hint:'An effect is predicted without naming its direction.'},
+    ],
+    chips:['Vocabulary test score','Number of books read','Reading frequency affects vocabulary scores','More books read → higher vocabulary scores','Parent education level','Library membership']
+  },
+];
+let cur=0,score=0,slots=[],selected=null,checked=false;
+function init(){
+  slots=Qs[cur].slots.map(()=>null);
+  selected=null;checked=false;
+  render();
+}
+function render(){
+  if(cur>=Qs.length){showSummary();return;}
+  const q=Qs[cur];
+  document.getElementById('prog').style.width=Math.round((cur/Qs.length)*100)+'%';
+  const allFilled=slots.every(s=>s!==null);
+  const usedChips=new Set(slots.filter(Boolean));
+  let slotsHtml=q.slots.map((s,i)=>{
+    let cls='drop-zone'+(slots[i]?' filled':'');
+    if(checked){
+      cls+=slots[i]===s.answer?' correct':' wrong';
+    }
+    return `<div style="margin-bottom:.75rem">
+      <div class="step-label">${s.label}</div>
+      <div class="${cls}" id="slot${i}" onclick="slotClick(${i})">${slots[i]||'<span style="color:var(--color-text-tertiary);font-size:13px">tap a term below, then tap here</span>'}</div>
+      ${checked&&slots[i]!==s.answer?`<div style="font-size:12px;color:var(--color-text-danger);margin-top:3px">Correct: ${s.answer} — ${s.hint}</div>`:''}
+    </div>`;
+  }).join('');
+  const chipsHtml=q.chips.map(c=>`<span class="chip${usedChips.has(c)?' used':''}" id="chip_${btoa(c).slice(0,8)}" onclick="chipClick('${c.replace(/'/g,"\\'")}' )">${c}</span>`).join('');
+  let fbHtml='';
+  if(checked){
+    const allCorrect=q.slots.every((s,i)=>slots[i]===s.answer);
+    if(allCorrect){score++;fbHtml=`<div class="fb-box ok show">All correct! You identified the IV, DV, and both hypothesis types accurately.</div>`;}
+    else{fbHtml=`<div class="fb-box bad show">Review the highlighted slots. Each answer is now shown — read the hint to understand why.</div>`;}
+  }
+  document.getElementById('area').innerHTML=`
+    <div class="card">
+      <div class="step-label">Headline ${cur+1} of ${Qs.length}</div>
+      <div class="headline">${q.headline}</div>
+      ${slotsHtml}
+      <div class="step-label">Available terms — tap to select, then tap a slot</div>
+      <div class="chips">${chipsHtml}</div>
+      ${fbHtml}
+      <div style="display:flex;gap:8px;margin-top:.75rem">
+        <button class="check-btn" onclick="checkAns()" ${allFilled&&!checked?'':'disabled'}>Check answers</button>
+        <button class="next-btn" id="nxtbtn" style="${checked?'display:inline-block':''}" onclick="nextQ()">
+          ${cur===Qs.length-1?'See results':'Next headline →'}
+        </button>
+      </div>
+    </div>`;
+  if(selected!==null){
+    document.querySelectorAll('.chip').forEach(el=>{
+      if(el.textContent===selected) el.style.outline='2px solid var(--color-border-info)';
+    });
+  }
+}
+function chipClick(val){selected=val;render();}
+function slotClick(i){
+  if(checked) return;
+  if(selected===null) return;
+  const old=slots[i];
+  slots[i]=selected;
+  selected=old;
+  render();
+}
+function checkAns(){if(slots.every(s=>s!==null)){checked=true;render();}}
+function nextQ(){cur++;init();}
+function showSummary(){
+  document.getElementById('prog').style.width='100%';
+  const pct=Math.round((score/Qs.length)*100);
+  document.getElementById('area').innerHTML=`<div class="summary">
+    <div class="score-ring">${score}/${Qs.length}</div>
+    <h3 style="font-size:18px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)">${pct>=67?'Strong hypothesis skills!':'Review IV/DV and hypothesis types in Chapter 2.'}</h3>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Key concepts practiced: independent variable, dependent variable, directional hypothesis, non-directional hypothesis.</p>
+    <button class="restart-btn" onclick="cur=0;score=0;init()">Retake activity</button>
+  </div>`;
+}
+init();
+</script>
