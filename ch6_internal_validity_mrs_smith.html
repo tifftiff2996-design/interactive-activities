@@ -1,0 +1,108 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-warning);color:var(--color-text-warning);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.prog-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.prog-fill{height:4px;background:var(--color-text-warning);border-radius:2px;transition:width .4s}
+.ref{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:1.25rem}
+.ref-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.5rem .75rem}
+.ref-name{font-size:11px;font-weight:500;color:var(--color-text-primary);margin-bottom:1px}
+.ref-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.35}
+.q-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.q-meta{font-size:12px;color:var(--color-text-secondary);margin-bottom:.4rem}
+.q-text{font-size:14px;color:var(--color-text-primary);line-height:1.6;margin-bottom:.9rem;background:var(--color-background-primary);padding:.75rem;border-radius:var(--border-radius-md)}
+.q-ask{font-size:13px;font-weight:500;color:var(--color-text-secondary);margin-bottom:.5rem}
+.opts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.ob{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.55rem .75rem;font-size:12px;color:var(--color-text-primary);cursor:pointer;text-align:left}
+.ob:hover{background:var(--color-background-secondary)}
+.ob.cor{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.ob.wrg{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.ob.rev{opacity:.55;background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.fb{margin-top:.7rem;font-size:13px;line-height:1.5;padding:.6rem .9rem;border-radius:var(--border-radius-md);display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.fb.bad{background:var(--color-background-danger);color:var(--color-text-danger)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:.75rem}
+.nb{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.nb:disabled{opacity:.35;cursor:default}
+.nb.p{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.summary{text-align:center;padding:2rem 1rem}
+.score-ring{display:inline-flex;align-items:center;justify-content:center;width:84px;height:84px;border-radius:50%;border:3px solid var(--color-border-warning);font-size:24px;font-weight:500;color:var(--color-text-warning);margin-bottom:1rem}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapter 6</span>
+  <h2>Internal validity — spot the threat (MRS SMITH)</h2>
+  <p class="sub">Read each flawed research scenario and identify which MRS SMITH threat to internal validity is present.</p>
+  <div class="ref">
+    <div class="ref-card"><div class="ref-name">M — Maturation</div><div class="ref-desc">Biological/psychological changes in participants over time</div></div>
+    <div class="ref-card"><div class="ref-name">R — Regression to mean</div><div class="ref-desc">Extreme scorers naturally move toward average on retesting</div></div>
+    <div class="ref-card"><div class="ref-name">S — Selection</div><div class="ref-desc">Pre-existing differences between groups before the study</div></div>
+    <div class="ref-card"><div class="ref-name">S — Selection × Maturation</div><div class="ref-desc">Groups mature or change at different rates</div></div>
+    <div class="ref-card"><div class="ref-name">M — Mortality</div><div class="ref-desc">Differential dropout between conditions</div></div>
+    <div class="ref-card"><div class="ref-name">I — Instrumentation</div><div class="ref-desc">Changes in measurement tools or procedures across time</div></div>
+    <div class="ref-card"><div class="ref-name">T — Testing</div><div class="ref-desc">Pre-test exposure affects post-test performance</div></div>
+    <div class="ref-card"><div class="ref-name">H — History</div><div class="ref-desc">External events between measurements affect outcomes</div></div>
+  </div>
+  <div class="prog-bar"><div class="prog-fill" id="pg" style="width:0%"></div></div>
+  <div id="area"></div>
+</div>
+<script>
+const items=[
+  {q:'A researcher gives students a math pre-test, provides a 12-week tutoring program, then gives the same 20-question math test as a post-test. Students score higher on the post-test. What is the primary threat?',a:2,opts:['History','Testing','Maturation','Instrumentation'],fb:'Because the exact same test is used as both pre- and post-test, students may score higher simply because they remember or have been exposed to the questions — that\'s the testing threat.'},
+  {q:'A 6-month exercise intervention study begins in January. By June, participants in both the exercise group and control group report improved mood. What is the primary threat?',a:1,opts:['Maturation','History','Mortality','Regression to mean'],fb:'External events happening during the study — like the transition from winter to spring/summer (more daylight, warmer weather, school ending) — could independently explain the mood improvement. That\'s history.'},
+  {q:'A reading intervention study recruits students who scored in the lowest 10% on a reading test. After the intervention, their scores improve. The researcher claims the program worked. What is the primary threat?',a:3,opts:['Selection','Instrumentation','Testing','Regression to mean'],fb:'Students selected specifically because they scored extremely low will, on average, score somewhat higher on retesting even without any intervention — this is regression to the mean.'},
+  {q:'A weight-loss study runs for 12 months. Participants in the diet-only group drop out at twice the rate of those in the diet-plus-exercise group, usually because they are not losing weight. What is the primary threat?',a:1,opts:['Selection','Mortality','Maturation','History'],fb:'When participants drop out of one condition at a higher rate than another — especially for reasons related to the outcome — this is mortality (attrition). The remaining diet-only group may represent the more motivated or naturally successful individuals.'},
+  {q:'In a stress study, the researcher measures cortisol levels using one brand of test kit in Week 1. That kit is discontinued, so she uses a different brand in Week 12. Scores appear to drop. What is the primary threat?',a:3,opts:['Maturation','Testing','History','Instrumentation'],fb:'A change in the measurement instrument or procedure across time points is instrumentation. Any difference in scores could reflect the different kit\'s sensitivity rather than a true change in participants.'},
+  {q:'A school district assigns high-achieving students to a new gifted curriculum and average-achieving students to the standard curriculum. After a year, the gifted group outperforms the other. What is the primary threat?',a:0,opts:['Selection','Mortality','Maturation','Instrumentation'],fb:'The groups differed systematically before the study began — one was high-achieving at the outset. Any outcome difference could simply reflect this pre-existing difference rather than the curriculum\'s effect. That\'s selection bias.'},
+  {q:'A 2-year longitudinal study tracks children\'s reading fluency. By the end of the study, all children read significantly better regardless of which reading program they used. What is the primary threat?',a:2,opts:['History','Regression to mean','Maturation','Selection'],fb:'Over 2 years, children naturally develop cognitively and physically. Reading improvement could be the result of normal developmental maturation rather than the reading program — that\'s the maturation threat.'},
+];
+let cur=0,score=0,picked=null,checked=false;
+function render(){
+  if(cur>=items.length){showSummary();return;}
+  const it=items[cur];
+  document.getElementById('pg').style.width=Math.round((cur/items.length)*100)+'%';
+  const optHtml=it.opts.map((o,i)=>{
+    let cls='ob';
+    if(checked){if(i===it.a)cls+=' cor';else if(i===picked&&picked!==it.a)cls+=' wrg';}
+    return `<button class="${cls}" onclick="pick(${i})" ${checked?'disabled':''}>${o}</button>`;
+  }).join('');
+  let fb='';
+  if(checked){
+    const ok=picked===it.a;
+    fb=`<div class="fb ${ok?'ok':'bad'} show">${ok?'Correct — ':'Incorrect. '}${it.fb}</div>`;
+  }
+  document.getElementById('area').innerHTML=`
+    <div class="q-card">
+      <div class="q-meta">Scenario ${cur+1} of ${items.length}</div>
+      <div class="q-text">${it.q}</div>
+      <div class="q-ask">Which MRS SMITH threat is primarily at work?</div>
+      <div class="opts">${optHtml}</div>
+      ${fb}
+    </div>
+    <div class="nav">
+      <button class="nb" onclick="go(-1)" ${cur===0?'disabled':''}>← Back</button>
+      <span style="font-size:13px;color:var(--color-text-secondary)">${score} correct</span>
+      <button class="nb p" onclick="go(1)" ${!checked?'disabled':''}>
+        ${cur===items.length-1?'Results':'Next →'}
+      </button>
+    </div>`;
+}
+function pick(i){if(checked)return;picked=i;checked=true;if(i===items[cur].a)score++;render();}
+function go(d){if(d>0&&cur<items.length)cur++;else if(d<0&&cur>0){cur--;picked=null;checked=false;}render();}
+function showSummary(){
+  document.getElementById('pg').style.width='100%';
+  const pct=Math.round((score/items.length)*100);
+  document.getElementById('area').innerHTML=`<div class="summary">
+    <div class="score-ring">${score}/${items.length}</div>
+    <h3 style="font-size:18px;font-weight:500;margin-bottom:.5rem;color:var(--color-text-primary)">
+      ${pct>=85?'Excellent threat detection skills!':pct>=57?'Good — review history vs. maturation and regression to mean.':'Revisit the MRS SMITH framework in Chapter 6.'}
+    </h3>
+    <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1.5rem">Concepts: maturation, regression to mean, selection, mortality, instrumentation, testing, history.</p>
+    <button style="background:var(--color-text-primary);color:var(--color-background-primary);border:none;border-radius:var(--border-radius-md);padding:.55rem 1.4rem;font-size:13px;cursor:pointer" onclick="cur=0;score=0;picked=null;checked=false;render()">Retake</button>
+  </div>`;
+}
+render();
+</script>
