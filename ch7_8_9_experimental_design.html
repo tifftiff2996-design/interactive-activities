@@ -1,0 +1,126 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{padding:1.5rem 0}
+.chap-badge{display:inline-block;background:var(--color-background-danger);color:var(--color-text-danger);font-size:12px;font-weight:500;padding:3px 10px;border-radius:20px;margin-bottom:.5rem}
+h2{font-size:18px;font-weight:500;color:var(--color-text-primary);margin-bottom:.25rem}
+.sub{font-size:14px;color:var(--color-text-secondary);margin-bottom:1.25rem}
+.prog-bar{height:4px;background:var(--color-border-tertiary);border-radius:2px;margin-bottom:1.5rem}
+.prog-fill{height:4px;background:var(--color-text-danger);border-radius:2px;transition:width .4s}
+.tab-row{display:flex;gap:6px;margin-bottom:1.25rem;flex-wrap:wrap}
+.tab{border:0.5px solid var(--color-border-secondary);border-radius:20px;padding:.3rem .85rem;font-size:12px;cursor:pointer;background:var(--color-background-primary);color:var(--color-text-secondary)}
+.tab.active{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.q-card{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:1.25rem;margin-bottom:1rem}
+.q-meta{font-size:12px;color:var(--color-text-secondary);margin-bottom:.4rem}
+.q-text{font-size:14px;color:var(--color-text-primary);line-height:1.6;margin-bottom:.9rem;background:var(--color-background-primary);padding:.75rem;border-radius:var(--border-radius-md)}
+.opts{display:flex;flex-direction:column;gap:7px}
+.ob{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.6rem .9rem;font-size:13px;color:var(--color-text-primary);cursor:pointer;text-align:left}
+.ob:hover{background:var(--color-background-secondary)}
+.ob.cor{background:var(--color-background-success);border-color:var(--color-border-success);color:var(--color-text-success)}
+.ob.wrg{background:var(--color-background-danger);border-color:var(--color-border-danger);color:var(--color-text-danger)}
+.fb{margin-top:.7rem;font-size:13px;line-height:1.5;padding:.6rem .9rem;border-radius:var(--border-radius-md);display:none}
+.fb.show{display:block}
+.fb.ok{background:var(--color-background-success);color:var(--color-text-success)}
+.fb.bad{background:var(--color-background-danger);color:var(--color-text-danger)}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:.75rem}
+.nb{background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);padding:.5rem 1.1rem;font-size:13px;cursor:pointer;color:var(--color-text-primary)}
+.nb:disabled{opacity:.35;cursor:default}
+.nb.p{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.score-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1rem}
+.sc{background:var(--color-background-secondary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-md);padding:.75rem;text-align:center}
+.sc-num{font-size:22px;font-weight:500;color:var(--color-text-primary)}
+.sc-lbl{font-size:11px;color:var(--color-text-secondary);margin-top:2px}
+</style>
+<div class="wrap">
+  <span class="chap-badge">Chapters 7 · 8 · 9</span>
+  <h2>Experimental design — classify the study</h2>
+  <p class="sub">Each question tests a concept from Chapters 7, 8, or 9. Use the tabs to jump between chapters.</p>
+  <div class="tab-row" id="tabs"></div>
+  <div class="prog-bar"><div class="prog-fill" id="pg" style="width:0%"></div></div>
+  <div id="area"></div>
+</div>
+<script>
+const banks={
+  '7':[
+    {q:'A researcher randomly assigns 90 participants to one of three conditions: (A) no music, (B) classical music, (C) white noise, while they solve math problems. Which element makes this a true experiment?',a:0,opts:['Random assignment to conditions','Measuring math performance','Having three conditions instead of two','Using music as the variable'],fb:'Random assignment is the defining feature of a true experiment — it is what allows the researcher to control for individual differences and make causal claims.'},
+    {q:'In a study on caffeine and alertness, the IV is the amount of caffeine consumed (0 mg, 100 mg, 200 mg). What are the levels of the IV?',a:2,opts:['Alertness score','Caffeine and alertness','0 mg, 100 mg, and 200 mg','The number of participants in each group'],fb:'Levels are the specific values or conditions of the independent variable. Here there are three levels: 0 mg (control), 100 mg, and 200 mg.'},
+    {q:'A researcher finds that students who eat breakfast score higher on exams. She concludes that eating breakfast causes better exam performance. What is the main problem?',a:1,opts:['The sample is too small','It is a correlational finding — no manipulation occurred','Exam scores are not a valid DV','The study needs a control group'],fb:'Without manipulating breakfast (randomly assigning participants to eat or not eat), the researcher cannot establish causation. Correlation cannot establish that breakfast caused the higher scores.'},
+    {q:'A study manipulates whether participants receive positive or negative feedback and measures their subsequent motivation. The control condition receives no feedback. What is the purpose of the no-feedback control group?',a:3,opts:['To increase statistical power','To eliminate the testing threat','To double the sample size','To provide a baseline against which the experimental conditions can be compared'],fb:'A control condition establishes a baseline — it shows what happens in the absence of the treatment, which is essential for interpreting whether the experimental conditions produced a change.'},
+  ],
+  '8':[
+    {q:'A researcher randomly assigns 60 participants into three groups: low, medium, or high levels of anxiety induction. Each participant is in only one group. What type of design is this?',a:1,opts:['Within-subjects design','Between-subjects design','Mixed design','Correlational design'],fb:'When each participant appears in only one condition (one level of the IV), it is a between-subjects design. Individual differences are controlled through random assignment.'},
+    {q:'In a between-subjects design with 3 groups and 20 participants per group, a participant in the "high anxiety" group becomes too stressed and drops out. This is a concern for which reason?',a:2,opts:['It introduces a testing threat','It reduces statistical power only','It may cause differential attrition (mortality threat)','It eliminates the need for counterbalancing'],fb:'If dropout is related to the treatment (e.g., highly anxious people drop out of the high-anxiety condition), the remaining group becomes systematically different — this is the mortality/attrition threat to internal validity.'},
+    {q:'A researcher wants to compare a new therapy to a waitlist control. She assigns participants to conditions based on when they arrive at the clinic — the first 30 go to therapy, the next 30 to the waitlist. What is the problem?',a:0,opts:['This is not random assignment — early arrivers may differ systematically from later arrivers','The study needs more conditions','The DV must be measured at baseline','A between-subjects design should not use a waitlist control'],fb:'Assigning participants based on arrival order is not random — early arrivers may be more motivated or less severely affected. This creates a selection threat: the groups differ before the study begins.'},
+    {q:'Compared to a within-subjects design, a between-subjects design requires _______ participants to achieve the same statistical power.',a:3,opts:['fewer','the same number of','no','more'],fb:'Because each participant contributes data to only one condition in a between-subjects design, you need more participants overall to achieve the same statistical power as a within-subjects design where each participant serves in all conditions.'},
+  ],
+  '9':[
+    {q:'A researcher has each participant taste and rate all four flavors of a new yogurt on different days. This is an example of:',a:0,opts:['A within-subjects (repeated measures) design','A between-subjects design','A quasi-experimental design','A correlational design'],fb:'When the same participants experience every level of the IV — tasting all four flavors — that is a within-subjects (repeated measures) design. Each participant serves as their own control.'},
+    {q:'In a memory study, participants study word lists in quiet conditions first and noisy conditions second. Scores are higher in quiet. A critic points out this might be due to fatigue. This is an example of:',a:2,opts:['A selection threat','A history threat','An order effect (fatigue effect)','A regression to mean threat'],fb:'When performance changes as a function of the order in which conditions are experienced — here, performing worse in the second condition because of tiredness — that is a fatigue or carryover order effect, a key concern in within-subjects designs.'},
+    {q:'To control for order effects in a within-subjects design with four conditions (A, B, C, D), a researcher creates all possible orderings and assigns equal numbers of participants to each. This strategy is called:',a:1,opts:['Random assignment','Complete counterbalancing','Matched-pairs design','Latin square counterbalancing'],fb:'Complete counterbalancing uses every possible ordering of conditions. For 4 conditions there are 24 possible orders. While thorough, it requires many participants and is only practical with a small number of conditions.'},
+    {q:'What is the primary advantage of a within-subjects design over a between-subjects design?',a:3,opts:['It eliminates all order effects automatically','It requires no ethical approval','It never needs counterbalancing','Each participant serves as their own control, removing individual differences as a source of error variance and increasing statistical power'],fb:'Because the same person experiences all conditions, pre-existing individual differences (personality, intelligence, motivation) affect all conditions equally and are therefore removed as a source of variance — making the design more statistically sensitive.'},
+  ],
+};
+const chaps=['7','8','9'];
+let activeCh='7',cur=0,scores={'7':0,'8':0,'9':0},picked=null,checked=false;
+function switchCh(ch){activeCh=ch;cur=0;picked=null;checked=false;renderTabs();render();}
+function renderTabs(){
+  document.getElementById('tabs').innerHTML=chaps.map(c=>`<button class="tab${activeCh===c?' active':''}" onclick="switchCh('${c}')">Chapter ${c} — ${c==='7'?'Experimental strategy':c==='8'?'Between-subjects':'Within-subjects'}</button>`).join('');
+}
+function render(){
+  const bank=banks[activeCh];
+  if(cur>=bank.length){showChSummary();return;}
+  const it=bank[cur];
+  const pct=Math.round((cur/bank.length)*100);
+  document.getElementById('pg').style.width=pct+'%';
+  const optHtml=it.opts.map((o,i)=>{
+    let cls='ob';
+    if(checked){if(i===it.a)cls+=' cor';else if(i===picked&&picked!==it.a)cls+=' wrg';}
+    return `<button class="${cls}" onclick="pick(${i})" ${checked?'disabled':''}>${o}</button>`;
+  }).join('');
+  let fb='';
+  if(checked){
+    const ok=picked===it.a;
+    fb=`<div class="fb ${ok?'ok':'bad'} show">${ok?'Correct — ':'Incorrect. '}${it.fb}</div>`;
+  }
+  document.getElementById('area').innerHTML=`
+    <div class="q-card">
+      <div class="q-meta">Question ${cur+1} of ${bank.length} · Chapter ${activeCh}</div>
+      <div class="q-text">${it.q}</div>
+      <div class="opts">${optHtml}</div>
+      ${fb}
+    </div>
+    <div class="nav">
+      <button class="nb" onclick="go(-1)" ${cur===0?'disabled':''}>← Back</button>
+      <span style="font-size:13px;color:var(--color-text-secondary)">${scores[activeCh]} correct</span>
+      <button class="nb p" onclick="go(1)" ${!checked?'disabled':''}>
+        ${cur===bank.length-1?'Chapter summary':'Next →'}
+      </button>
+    </div>`;
+}
+function pick(i){if(checked)return;picked=i;checked=true;if(i===banks[activeCh][cur].a)scores[activeCh]++;render();}
+function go(d){
+  if(d>0&&cur<banks[activeCh].length)cur++;
+  else if(d<0&&cur>0){cur--;picked=null;checked=false;}
+  render();
+}
+function showChSummary(){
+  document.getElementById('pg').style.width='100%';
+  const bank=banks[activeCh];
+  const pct=Math.round((scores[activeCh]/bank.length)*100);
+  const total=Object.values(scores).reduce((a,b)=>a+b,0);
+  const maxTotal=Object.values(banks).reduce((a,b)=>a+b.length,0);
+  document.getElementById('area').innerHTML=`
+    <div class="score-summary">
+      ${chaps.map(c=>`<div class="sc"><div class="sc-num">${scores[c]}/${banks[c].length}</div><div class="sc-lbl">Chapter ${c}</div></div>`).join('')}
+    </div>
+    <div style="text-align:center;padding:1rem 0">
+      <p style="font-size:14px;color:var(--color-text-secondary);margin-bottom:1rem">Chapter ${activeCh} complete — ${pct}%.<br>${pct>=75?'Strong grasp of this design type.':'Review this chapter\'s key concepts and try again.'}</p>
+      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+        ${chaps.filter(c=>c!==activeCh).map(c=>`<button class="nb p" onclick="switchCh('${c}')">Try Chapter ${c}</button>`).join('')}
+        <button class="nb" onclick="cur=0;scores[activeCh]=0;picked=null;checked=false;render()">Retry Ch. ${activeCh}</button>
+      </div>
+    </div>`;
+}
+renderTabs();
+render();
+</script>
